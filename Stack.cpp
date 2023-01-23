@@ -1,9 +1,10 @@
 #include<iostream>
 
 #include<stdio.h>
+#include<math.h>
 #include<stdlib.h>
 
-#define MAX_SIZE 10
+#define MAX_SIZE 100
 
 using namespace std;
 
@@ -22,7 +23,7 @@ public:
 
     bool isEmpty(){
         if (top == 0){
-            cout << "\n!>> Stack is Empty!";
+            cout << "\n!>> Stack Underflow!";
             return true;
         }
     
@@ -31,7 +32,7 @@ public:
 
     bool isFull(){
         if (top == MAX_SIZE){
-            cout << "\n!>> Stack is Full!";
+            cout << "\n!>> Stack Overflow!";
             return true;
         }
     
@@ -48,8 +49,9 @@ public:
 
     T peak(){
         if (!isEmpty()){
-            cout << "The top Value is : " << arr_stack[top-1] << endl;
+            cout << endl <<"The top Value is : " << arr_stack[top-1];
         }
+        return arr_stack[top-1];
     }
 
     
@@ -73,12 +75,9 @@ public:
     }
 };
 
-string reverse() {
+string reverse(string str) {
     Stack<char> obj;
 
-    string str;
-    cout << "\nEnter The String to be reversed : ";
-    cin>>str;
     int i;
     for (i = 0; str[i] != '\0'; i++) {
         obj.push(str[i]);
@@ -91,14 +90,15 @@ string reverse() {
     return str;
 }
 
-
-int main() {
+void ArrayStack() {
     int choice, exit_p = 1, item;
+    string str;
+
     Stack<int> obj;
     do {
-        cout << "\n\nStack Main Menu";
+        cout << "\n\n Array Based Stack Menu";
 
-        cout << "\n1.Push \n2.Pop \n3.Display \n4.IsEmpty? \n5.Peak \n6.Reverse String \n0.Exit";
+        cout << "\n1.Push \n2.Pop \n3.Display \n4.IsEmpty? \n5.Peak \n6.Reverse String \n0.Back";
         cout << "\n>> Enter Your Choice : ";
         cin>>choice;
         switch (choice) {
@@ -122,13 +122,369 @@ int main() {
                 obj.peak();
                 break;
             case 6:
-                reverse();
+                cout << "\nEnter The String to be reversed : ";
+                cin>>str;
+                reverse(str);
                 break;
             default:
                 exit_p = 0;
                 break;
         }
     } while (exit_p);
+
+}
+
+
+// ------------------------------------
+
+
+template <class T>
+class LinkStack {
+public:
+    struct node 
+    {
+        T value;
+        node *next;
+    };
+
+    node* top;
+
+    LinkStack() {
+        top = NULL;
+    }
+
+    bool isEmpty(){
+        if (top == NULL){
+            cout << "\n!>> Stack Underflow!";
+            return true;
+        }
+    return false;
+    }
+
+    void push(int item) {
+        node* newPtr = new node;
+        newPtr->value = item;
+        newPtr->next = top;
+        top = newPtr;
+        cout << "\n!>> Pushed Value : " << item;
+        display();   
+    }
+
+    int peak(){
+        if (!isEmpty()){
+            cout << "The top Value is : " << top->value << endl;
+        }
+        return top->value;
+    }
+
+    
+    int pop() {
+        T top_value;
+
+        if (!isEmpty()){
+            top_value = top->value;
+            node *temp = top;
+            top = top->next;
+            cout << "\n!>> Popped Value : " << top_value;
+            display();
+        }
+        return top_value;
+    }
+
+    void display() {
+        node *temp = top;
+        int count = 0;
+        cout << "\n -------------------------------" << endl;
+        while (temp != NULL)
+        {
+            count++;
+            temp = temp->next;
+        }
+
+        for (int i = count; i > 0 ; i--)
+        {
+            temp = top;
+            for (int j = 1; j < i; j++){
+                temp = temp->next;
+            }
+            cout << " | " << temp->value;
+        }
+            cout << "\n -------------------------------" << endl;
+    }
+};
+
+string reverse2() {
+    LinkStack<char> obj;
+
+    string str;
+    cout << "\nEnter the String to be reversed : ";
+    cin>>str;
+    int i;
+    for (i = 0; str[i] != '\0'; i++) {
+        obj.push(str[i]);
+    }
+    for (i = 0; str[i] != '\0'; i++) {
+        str[i] = obj.pop();
+    }
+    cout << "\n!>> Reversed String : " << str;
+
+    return str;
+}
+
+
+void LinkStackMenu() {
+    int choice, exit_p = 1, item;
+    string str;
+    LinkStack<int> obj;
+    do {
+        cout << "\n\n lINKED Based Stack Menu";
+
+        cout << "\n1.Push \n2.Pop \n3.Display \n4.IsEmpty? \n5.Peak \n6.Reverse String \n0.Back";
+        cout << "\n>> Enter Your Choice : ";
+        cin>>choice;
+        switch (choice) {
+            case 1:
+                cout << "\nEnter the Value to be pushed : ";
+                cin>>item;
+                obj.push(item);
+                break;
+            case 2:
+                obj.pop();
+                break;
+            case 3:
+                obj.display();
+                break;
+            case 4:
+                if (!obj.isEmpty()){
+                    cout << "\n!>> Stack is NOT Empty!";
+                }
+                break;
+            case 5:
+                obj.peak();
+                break;
+            case 6:
+                cout << "\nEnter The String to be reversed : ";
+                cin>>str;
+                reverse(str);
+                break;
+            default:
+                exit_p = 0;
+                break;
+        }
+    } while (exit_p);
+
+}
+
+//  ------------------------
+
+void decimalToBinary(int number){
+    LinkStack<char> obj;
+    int remainder;
+    while (number > 0){
+        remainder = number % 2;
+        obj.push(char(remainder + '0'));
+        number = number / 2;
+    }
+    cout << "\n!>> Binary Values Stack : ";
+    obj.display();
+    
+    string answer = "";
+    while(!obj.isEmpty()){
+        answer += to_string(obj.pop()-'0');
+    }
+
+    cout << "\n\n!>> Decimal Value : " << answer;
+}
+
+void palindrome(){
+    string str;
+    cout << "\nEnter the String to be checked : ";
+    cin>>str;
+    if (reverse(str) == str){
+        cout << "\n!>> String is Palindrome!";
+    }
+    else{
+        cout << "\n!>> String is NOT Palindrome!";
+    }
+}
+
+int precedence(char ch){
+    if (ch == '+' || ch == '-'){
+        return 1;
+    }
+    else if (ch == '*' || ch == '/'){
+        return 2;
+    }
+    else if (ch == '^'){
+        return 3;
+    }
+    else{
+        return 0;
+    }
+}
+
+void convert_infix_to_postfix(string infix){
+    LinkStack<char> obj;
+    string postfix = "";
+    int i;
+    for (i = 0; infix[i] != '\0'; i++) {
+        if (infix[i] == '('){
+            obj.push(infix[i]);
+        }
+        else if (infix[i] == ')'){
+            while (obj.top->value != '('){
+                postfix += obj.pop();
+            }
+            obj.pop();
+        }
+        else if (infix[i] == '+' || infix[i] == '-' || infix[i] == '*' || infix[i] == '/' || infix[i] == '^'){
+            while (!obj.isEmpty() && obj.top->value != '(' && precedence(infix[i]) <= precedence(obj.top->value)){
+                postfix += obj.pop();
+            }
+            obj.push(infix[i]);
+        }
+        else{
+            postfix += infix[i];
+        }
+    }
+    while (!obj.isEmpty()){
+        postfix += obj.pop();
+    }
+    cout << "\n!>> Postfix Expression : " << postfix;
+}
+
+void postfixEvaluation(string postfix){
+    Stack<int> obj;
+    int i;
+    for (i = 0; postfix[i] != '\0'; i++) {
+        if (postfix[i] == '+' || postfix[i] == '-' || postfix[i] == '*' || postfix[i] == '/' || postfix[i] == '^'){
+            int a = obj.pop();
+            int b = obj.pop();
+            if (postfix[i] == '+'){
+                obj.push(a + b);
+            }
+            else if (postfix[i] == '-'){
+                obj.push(a - b);
+            }
+            else if (postfix[i] == '*'){
+                obj.push(a * b);
+            }
+            else if (postfix[i] == '/'){
+                obj.push(a / b);
+            }
+            else if (postfix[i] == '^'){
+                obj.push(pow(a, b));
+            }
+        }
+        else{
+            obj.push(postfix[i] - '0');
+        }
+    }
+    cout << "\n!>> Result : " << obj.pop();
+}
+
+int prec(char c)
+{
+    if (c == '^')
+        return 3;
+    else if (c == '/' || c == '*')
+        return 2;
+    else if (c == '+' || c == '-')
+        return 1;
+    else
+        return -1;
+}
+
+void infixToPostfix(string s)
+{
+ 
+    Stack<char> st;
+    string result;
+ 
+    for (int i = 0; i < s.length(); i++) {
+        char c = s[i],x;
+ 
+        // If the scanned character is
+        // an operand, add it to output string.
+        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
+            result += c;
+ 
+        // If the scanned character is an
+        // ‘(‘, push it to the stack.
+        else if (c == '(')
+            st.push('(');
+ 
+        // If the scanned character is an ‘)’,
+        // pop and to output string from the stack
+        // until an ‘(‘ is encountered.
+        else if (c == ')') {
+            while (st.peak() != '(') {
+                result += st.peak();
+                st.pop();
+            }
+            st.pop();
+        }
+ 
+        // If an operator is scanned
+        else {
+            while (!st.isEmpty() && prec(s[i]) <= prec(st.peak())) {
+                result += st.peak();
+                st.pop();
+            }
+            st.push(c);
+        }
+    }
+ 
+    // Pop all the remaining elements from the stack
+    while (!st.isEmpty()) {
+        result += st.peak();
+        st.pop();
+    }
+ 
+    cout << endl << endl << "Postfix: "<< result << endl;
+}
+
+int main(){
+    int choice, num;
+    string infix, postfix;
+    do {
+        cout << "\n\n Stack Menu";
+
+        cout << "\n1.Array Based \n2.LinkedList Based \n3.Reverse String \n4.Decimal to Binary\n5.Check Palindrome \n6.Evaluate Postfix \n7.Infix to Postfix\n0.Back";
+        cout << "\n>> Enter Your Choice : ";
+        cin>>choice;
+        switch (choice) {
+            case 1:
+                ArrayStack();
+                break;
+            case 2:
+                LinkStackMenu();
+                break;
+            case 3:
+                reverse2();
+                break;
+            case 4:
+                cout << "\nEnter a number to convert: ";
+                cin>>num;
+                decimalToBinary(num);
+                break;
+            case 5:
+                palindrome();
+                break;
+            case 6:
+                cout << "\nEnter the Postfix Expression : ";
+                cin>>postfix;
+                postfixEvaluation(postfix);
+                break;
+            case 7:
+                cout << "\nEnter the Infix Expression : ";
+                cin>>infix;
+                convert_infix_to_postfix(infix);
+                break;
+            default:
+                break;
+            }
+        }while(choice != 0);
 
     return 0;
 }
