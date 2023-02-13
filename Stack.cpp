@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include<math.h>
 #include<stdlib.h>
+#include<stack>
 
 #define MAX_SIZE 100
 
@@ -66,11 +67,11 @@ public:
     }
 
     void display() {
-        cout << "\n!>> Stack Size : " << top << "  Max Size : " << MAX_SIZE;;
-            cout << "\n -------------------------------" << endl;
-        for (i = 0; i < top; i++){
-            cout << " | " << arr_stack[i];
-        }
+        // cout << "\n!>> Stack Size : " << top << "  Max Size : " << MAX_SIZE;;
+        //     cout << "\n -------------------------------" << endl;
+        // for (i = 0; i < top; i++){
+        //     cout << " | " << arr_stack[i];
+        // }
             cout << "\n -------------------------------" << endl;
     }
 };
@@ -161,7 +162,7 @@ public:
     return false;
     }
 
-    void push(int item) {
+    void push(T item) {
         node* newPtr = new node;
         newPtr->value = item;
         newPtr->next = top;
@@ -170,7 +171,7 @@ public:
         display();   
     }
 
-    int peak(){
+    T peak(){
         if (!isEmpty()){
             cout << "The top Value is : " << top->value << endl;
         }
@@ -178,7 +179,7 @@ public:
     }
 
     
-    int pop() {
+    T pop() {
         T top_value;
 
         if (!isEmpty()){
@@ -293,7 +294,7 @@ void decimalToBinary(int number){
         answer += to_string(obj.pop()-'0');
     }
 
-    cout << "\n\n!>> Decimal Value : " << answer;
+    cout << "\n\n!>> Binary Value : " << answer;
 }
 
 void palindrome(){
@@ -354,95 +355,38 @@ void convert_infix_to_postfix(string infix){
 }
 
 void postfixEvaluation(string postfix){
-    Stack<int> obj;
+    Stack<float> obj;
     int i;
     for (i = 0; postfix[i] != '\0'; i++) {
         if (postfix[i] == '+' || postfix[i] == '-' || postfix[i] == '*' || postfix[i] == '/' || postfix[i] == '^'){
-            int a = obj.pop();
-            int b = obj.pop();
+            float a = obj.pop();
+            float b = obj.pop();
             if (postfix[i] == '+'){
                 obj.push(a + b);
             }
             else if (postfix[i] == '-'){
-                obj.push(a - b);
+                obj.push(b - a);
             }
             else if (postfix[i] == '*'){
                 obj.push(a * b);
             }
             else if (postfix[i] == '/'){
-                obj.push(a / b);
+                obj.push(b / a);
             }
             else if (postfix[i] == '^'){
-                obj.push(pow(a, b));
+                obj.push(pow(b, a));
             }
         }
         else{
             obj.push(postfix[i] - '0');
         }
     }
-    cout << "\n!>> Result : " << obj.pop();
+
+    cout << "!>> Result : ";
+
+    cout << obj.pop();
 }
 
-int prec(char c)
-{
-    if (c == '^')
-        return 3;
-    else if (c == '/' || c == '*')
-        return 2;
-    else if (c == '+' || c == '-')
-        return 1;
-    else
-        return -1;
-}
-
-void infixToPostfix(string s)
-{
- 
-    Stack<char> st;
-    string result;
- 
-    for (int i = 0; i < s.length(); i++) {
-        char c = s[i],x;
- 
-        // If the scanned character is
-        // an operand, add it to output string.
-        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
-            result += c;
- 
-        // If the scanned character is an
-        // ‘(‘, push it to the stack.
-        else if (c == '(')
-            st.push('(');
- 
-        // If the scanned character is an ‘)’,
-        // pop and to output string from the stack
-        // until an ‘(‘ is encountered.
-        else if (c == ')') {
-            while (st.peak() != '(') {
-                result += st.peak();
-                st.pop();
-            }
-            st.pop();
-        }
- 
-        // If an operator is scanned
-        else {
-            while (!st.isEmpty() && prec(s[i]) <= prec(st.peak())) {
-                result += st.peak();
-                st.pop();
-            }
-            st.push(c);
-        }
-    }
- 
-    // Pop all the remaining elements from the stack
-    while (!st.isEmpty()) {
-        result += st.peak();
-        st.pop();
-    }
- 
-    cout << endl << endl << "Postfix: "<< result << endl;
-}
 
 int main(){
     int choice, num;
